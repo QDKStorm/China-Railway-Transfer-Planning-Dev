@@ -1,16 +1,19 @@
 #include <ctime>
 #include <iostream>
+#include <map>
 #include <stack>
 #include <string>
+#include <vector>
 #define N 1000005
 #define M 9000005
 #define depth_lim 4
 #define INTERVAL 15
 #define SPLIT 24 * 60 / INTERVAL
-#define TOTAL 3192
 using namespace std;
 int tot, head[N], h, t;
 stack<string> st;
+map<string, int> mp;
+vector<string> message;
 struct Edge {
     int v, w, nxt;
     string info;
@@ -19,6 +22,11 @@ struct QElem {
     int u, depth, from;
     string info;
 } queue[20000005];
+struct Node{
+    vector<string> resinfo;
+    int restime;
+};
+vector<Node> res;
 void addedge(int u, int v, int w, string info) {
     edge[++tot] = (Edge){v, w, head[u], info};
     head[u] = tot;
@@ -41,13 +49,14 @@ void BFS(int S, int T) {
             if (v == u.from)
                 continue;
             else if (v == T) {
+                message.clear();
                 st.push(edge[i].info);
                 backward(h - 1);
                 while (!st.empty()) {
-                    cout << st.top() << " ";
+                    message.push_back(st.top());
                     st.pop();
                 }
-                cout << endl;
+                res.push_back(Node{message, 0});
             } else
                 queue[++t] = QElem{v, u.depth + 1, h - 1, edge[i].info};
         }
@@ -57,8 +66,13 @@ int main() {
     clock_t start, end;
     start = clock();
     freopen("in.txt", "r", stdin);
-    int n;
-    cin >> n;
+    int m, id;
+    string station;
+    cin >> m;
+    while (m--) {
+        cin >> station >> id;
+        mp[station] = id;
+    }
     int u, v, w;
     string info;
     while (cin >> u >> v >> w >> info) {
@@ -71,11 +85,18 @@ int main() {
     // 计时
     end = clock();
     cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
-    int st = 623, ed = 465;
+    string ST = "北京南", ED = "上海";
+    int st = mp[ST], ed = mp[ED];
     for (int i = st * SPLIT * 2 + SPLIT; i < (st + 1) * SPLIT * 2; i++) {
         for (int j = ed * SPLIT * 2; j < ed * SPLIT * 2 + SPLIT; j++) {
             BFS(i, j);
         }
+    }
+    for(int i=0;i<res.size();i++){
+        for(int j=0;j<res[i].resinfo.size();j++){
+            cout<<res[i].resinfo[j]<<" ";
+        }
+        cout<<endl;
     }
     return 0;
 }
