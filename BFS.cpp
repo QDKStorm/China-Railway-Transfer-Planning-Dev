@@ -20,6 +20,7 @@ vector<string> message;
 struct Edge {
     int v, w, nxt;
     string info;
+    bool T;
 } edge[M];
 struct QElem {
     int u, depth, from;
@@ -52,8 +53,10 @@ void Stringsplit(const string &str, const string &split, vector<string> &res) {
 }
 
 void addedge(int u, int v, int w, string info) {
-    edge[++tot] = (Edge){v, w, head[u], info};
+    edge[++tot] = (Edge){v, w, head[u], info, false};
     head[u] = tot;
+    if (info == "T")
+        edge[tot].T = true;
 }
 void backward(int x) {
     if (x == -1)
@@ -61,7 +64,7 @@ void backward(int x) {
     st.push(queue[x].info);
     backward(queue[x].from);
 }
-void BFS(int S, int T) {
+void BFS(int S, int T, bool Ttag) {
     h = 1;
     t = 0;
     queue[++t] = QElem{S, 0, -1};
@@ -69,6 +72,8 @@ void BFS(int S, int T) {
         QElem u = queue[h];
         ++h;
         for (int i = head[u.u]; i; i = edge[i].nxt) {
+            if (edge[i].T && !Ttag)
+                continue;
             int v = edge[i].v;
             if (v == u.from)
                 continue;
@@ -104,8 +109,12 @@ int main() {
     }
     end = clock();
     cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
-    vector<string> ststations, edstations;
+
     string ST = "临潼", ED = "北京西";
+    bool T = true;
+
+    res.clear();
+    vector<string> ststations, edstations;
     Stringsplit(ST, " ", ststations);
     Stringsplit(ED, " ", edstations);
     for (int i = 0; i < ststations.size(); i++) {
@@ -115,7 +124,7 @@ int main() {
             int st = mp[ststations[i]], ed = mp[edstations[j]];
             for (int i = st * SPLIT * 2 + SPLIT; i < (st + 1) * SPLIT * 2; i++) {
                 for (int j = ed * SPLIT * 2; j < ed * SPLIT * 2 + SPLIT; j++) {
-                    BFS(i, j);
+                    BFS(i, j, T);
                 }
             }
         }
