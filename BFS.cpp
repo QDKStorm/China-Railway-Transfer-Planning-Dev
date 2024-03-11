@@ -37,10 +37,11 @@ int timecalc(string st, string ed) {
     int stm = (st[3] - '0') * 10 + (st[4] - '0');
     int edh = (ed[0] - '0') * 10 + (ed[1] - '0');
     int edm = (ed[3] - '0') * 10 + (ed[4] - '0');
-    if ((edh - sth) * 60 + (edm - stm) > 0)
-        return (edh - sth) * 60 + (edm - stm);
+    int ret = (edh - sth) * 60 + (edm - stm);
+    if (ret > 0)
+        return ret;
     else
-        return (edh - sth + 24) * 60 + (edm - stm);
+        return ret + 24 * 60;
 }
 void Stringsplit(const string &str, const string &split, vector<string> &res) {
     char *strc = new char[str.size() + 1];
@@ -52,7 +53,6 @@ void Stringsplit(const string &str, const string &split, vector<string> &res) {
     }
     delete[] strc;
 }
-
 void addedge(int u, int v, int w, string info, char y) {
     edge[++tot] = (Edge){v, w, head[u], info, false, y == 'Y' ? true : false};
     head[u] = tot;
@@ -140,8 +140,9 @@ int main() {
         }
     }
     for (int i = 0; i < res.size(); i++) {
+        int len = res[i].resinfo.size();
         string lastime = "";
-        for (int j = 0; j < res[i].resinfo.size(); j++) {
+        for (int j = 0; j < len; j++) {
             if (res[i].resinfo[j].length() <= 4)
                 continue;
             int infolength = res[i].resinfo[j].length();
