@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cmath>
 #include <cstring>
 #include <ctime>
 #include <iostream>
@@ -8,7 +9,7 @@
 #include <vector>
 #define N 1000005
 #define M 9000005
-#define depth_lim 4
+#define depth_lim 3
 #define INTERVAL 15
 #define SPLIT 24 * 60 / INTERVAL
 #define BADLIM 2.0
@@ -122,6 +123,8 @@ int main() {
 
     string ST = "隆回", ED = "北京西";
     bool T = false, Y = true;
+    int stt1 = 6, stm1 = 15, stt2 = 18, stm2 = 15;
+    int edt1 = 12, edm1 = 15, edt2 = 23, edm2 = 15;
 
     res.clear();
     vector<string> ststations, edstations;
@@ -132,8 +135,8 @@ int main() {
             if (mp.find(ststations[i]) == mp.end() || mp.find(edstations[j]) == mp.end())
                 continue;
             int st = mp[ststations[i]], ed = mp[edstations[j]];
-            for (int i = st * SPLIT * 2 + SPLIT; i < (st + 1) * SPLIT * 2; i++) {
-                for (int j = ed * SPLIT * 2; j < ed * SPLIT * 2 + SPLIT; j++) {
+            for (int i = st * SPLIT * 2 + SPLIT + 60 / INTERVAL * stt1 + ceil(stm1 / (double)INTERVAL); i <= st * SPLIT * 2 + SPLIT + 60 / INTERVAL * stt2 + stm2 / INTERVAL; i++) {
+                for (int j = ed * SPLIT * 2 + 60 / INTERVAL * edt1 + ceil(edm1 / (double)INTERVAL); j <= ed * SPLIT * 2 + 60 / INTERVAL * edt2 + edm2 / INTERVAL; j++) {
                     BFS(i, j, T, Y);
                 }
             }
