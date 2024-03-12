@@ -9,12 +9,11 @@
 #include <vector>
 #define N 1000005
 #define M 9000005
-#define depth_lim 3
 #define INTERVAL 15
 #define SPLIT 24 * 60 / INTERVAL
 #define BADLIM 2.0
 using namespace std;
-int tot, head[N], h, t;
+int tot, head[N], h, t, depth_lim = 3;
 stack<int> stw;
 stack<string> st;
 map<string, int> mp;
@@ -125,8 +124,10 @@ int main() {
     bool T = false, Y = true;
     int stt1 = 6, stm1 = 15, stt2 = 18, stm2 = 15;
     int edt1 = 12, edm1 = 15, edt2 = 23, edm2 = 15;
+    int transt = 1;
 
     res.clear();
+    depth_lim = 2 * transt + 1;
     vector<string> ststations, edstations;
     Stringsplit(ST, " ", ststations);
     Stringsplit(ED, " ", edstations);
@@ -170,3 +171,7 @@ int main() {
     }
     return 0;
 }
+/*
+隆回 北京西
+三亚 阿克陶
+*/
