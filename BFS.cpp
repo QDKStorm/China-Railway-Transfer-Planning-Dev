@@ -64,19 +64,21 @@ void backward(int x) {
     st.push(queue[x].info);
     backward(queue[x].from);
 }
-void BFS(int S, int T, bool Ttag, bool Ytag) {
+void BFS(int S, int T, bool Ttag, bool Ytag, bool Gban) {
     h = 1;
     t = 0;
     queue[++t] = QElem{S, 0, -1, 0, ""};
     while (h <= t && queue[h].depth < depth_lim) {
         QElem u = queue[h];
         ++h;
-        if(u.cumtime > BADLIM * best)
+        if (u.cumtime > BADLIM * best)
             continue;
         for (int i = head[u.u]; i; i = edge[i].nxt) {
             if (edge[i].T && !Ttag)
                 continue;
             if (edge[i].Y && !Ytag)
+                continue;
+            if (Gban && (edge[i].info[0] == 'G' || edge[i].info[0] == 'D' || edge[i].info[0] == 'C'))
                 continue;
             int v = edge[i].v;
             if (v == u.from)
@@ -117,11 +119,11 @@ int main() {
     end = clock();
     cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
 
-    string ST = "三亚", ED = "阿克陶";
-    bool T = false, Y = true;
+    string ST = "隆回", ED = "北京西";
+    bool T = false, Y = true, Gban = true;
     int stt1 = 6, stm1 = 15, stt2 = 18, stm2 = 15;
     int edt1 = 12, edm1 = 15, edt2 = 23, edm2 = 15;
-    int transt = 2;
+    int transt = 1;
 
     res.clear();
     depth_lim = 2 * transt + 1;
@@ -136,7 +138,7 @@ int main() {
             int st = mp[ststations[i]], ed = mp[edstations[j]];
             for (int i = st * SPLIT * 2 + SPLIT + 60 / INTERVAL * stt1 + ceil(stm1 / (double)INTERVAL); i <= st * SPLIT * 2 + SPLIT + 60 / INTERVAL * stt2 + stm2 / INTERVAL; i++) {
                 for (int j = ed * SPLIT * 2 + 60 / INTERVAL * edt1 + ceil(edm1 / (double)INTERVAL); j <= ed * SPLIT * 2 + 60 / INTERVAL * edt2 + edm2 / INTERVAL; j++) {
-                    BFS(i, j, T, Y);
+                    BFS(i, j, T, Y, Gban);
                 }
             }
         }
