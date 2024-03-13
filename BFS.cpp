@@ -13,8 +13,7 @@
 #define SPLIT 24 * 60 / INTERVAL
 #define BADLIM 2.0
 using namespace std;
-int tot, head[N], h, t, depth_lim = 3;
-stack<int> stw;
+int tot, head[N], h, t, depth_lim = 3, best = 0x3fffffff;
 stack<string> st;
 map<string, int> mp;
 vector<string> message;
@@ -24,7 +23,7 @@ struct Edge {
     bool T, Y;
 } edge[M];
 struct QElem {
-    int u, depth, from, w;
+    int u, depth, from, cumtime;
     string info;
 } queue[20000005];
 struct Node {
@@ -63,16 +62,17 @@ void backward(int x) {
     if (x == -1)
         return;
     st.push(queue[x].info);
-    stw.push(queue[x].w);
     backward(queue[x].from);
 }
 void BFS(int S, int T, bool Ttag, bool Ytag) {
     h = 1;
     t = 0;
-    queue[++t] = QElem{S, 0, -1};
+    queue[++t] = QElem{S, 0, -1, 0, ""};
     while (h <= t && queue[h].depth < depth_lim) {
         QElem u = queue[h];
         ++h;
+        if(u.cumtime > BADLIM * best)
+            continue;
         for (int i = head[u.u]; i; i = edge[i].nxt) {
             if (edge[i].T && !Ttag)
                 continue;
@@ -84,19 +84,16 @@ void BFS(int S, int T, bool Ttag, bool Ytag) {
             else if (v == T) {
                 message.clear();
                 st.push(edge[i].info);
-                stw.push(edge[i].w);
                 backward(h - 1);
                 while (!st.empty()) {
                     message.push_back(st.top());
                     st.pop();
                 }
                 res.push_back(Node{message, 0, 0});
-                while (!stw.empty()) {
-                    res[res.size() - 1].estitime += stw.top();
-                    stw.pop();
-                }
+                res[res.size() - 1].estitime = u.cumtime + edge[i].w;
+                best = min(best, res[res.size() - 1].estitime);
             } else
-                queue[++t] = QElem{v, u.depth + 1, h - 1, edge[i].w, edge[i].info};
+                queue[++t] = QElem{v, u.depth + 1, h - 1, edge[i].w + u.cumtime, edge[i].info};
         }
     }
 }
@@ -120,14 +117,15 @@ int main() {
     end = clock();
     cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
 
-    string ST = "隆回", ED = "北京西";
+    string ST = "三亚", ED = "阿克陶";
     bool T = false, Y = true;
     int stt1 = 6, stm1 = 15, stt2 = 18, stm2 = 15;
     int edt1 = 12, edm1 = 15, edt2 = 23, edm2 = 15;
-    int transt = 1;
+    int transt = 2;
 
     res.clear();
     depth_lim = 2 * transt + 1;
+    best = 0x3fffffff;
     vector<string> ststations, edstations;
     Stringsplit(ST, " ", ststations);
     Stringsplit(ED, " ", edstations);
