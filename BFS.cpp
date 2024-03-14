@@ -64,7 +64,7 @@ void backward(int x) {
     st.push(queue[x].info);
     backward(queue[x].from);
 }
-void BFS(int S, int T, bool Ttag, bool Ytag, bool Gban, bool Gonly) {
+void BFS(int S, int T, bool Ttag, bool Ytag, bool Gban, bool Gonly, bool lingchen) {
     h = 1;
     t = 0;
     queue[++t] = QElem{S, 0, -1, 0, ""};
@@ -81,6 +81,9 @@ void BFS(int S, int T, bool Ttag, bool Ytag, bool Gban, bool Gonly) {
             if (Gban && edge[i].info.length() > 4 && (edge[i].info[0] == 'G' || edge[i].info[0] == 'D'))
                 continue;
             if (Gonly && edge[i].info.length() > 4 && edge[i].info[0] != 'G' && edge[i].info[0] != 'D')
+                continue;
+            int infolength = edge[i].info.length();
+            if (!lingchen && edge[i].info.length() > 4 && (timecalc("00:00", edge[i].info.substr(infolength - 13, 5)) <= 6 * 60 || timecalc("00:00", edge[i].info.substr(infolength - 5, 5)) <= 6 * 60))
                 continue;
             int v = edge[i].v;
             if (v == u.from)
@@ -122,7 +125,7 @@ int main() {
     cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
 
     string ST = "渭南", ED = "北京西";
-    bool T = true, Y = true, Gban = false, Gonly = false, lingchen = true;
+    bool T = true, Y = true, Gban = false, Gonly = false, lingchen = false;
     int stt1 = 0, stm1 = 0, stt2 = 23, stm2 = 59;
     int edt1 = 0, edm1 = 0, edt2 = 23, edm2 = 59;
     int transt = 1;
@@ -140,7 +143,7 @@ int main() {
             int st = mp[ststations[i]], ed = mp[edstations[j]];
             for (int i = st * SPLIT * 2 + SPLIT + 60 / INTERVAL * stt1 + ceil(stm1 / (double)INTERVAL); i <= st * SPLIT * 2 + SPLIT + 60 / INTERVAL * stt2 + stm2 / INTERVAL; i++) {
                 for (int j = ed * SPLIT * 2 + 60 / INTERVAL * edt1 + ceil(edm1 / (double)INTERVAL); j <= ed * SPLIT * 2 + 60 / INTERVAL * edt2 + edm2 / INTERVAL; j++) {
-                    BFS(i, j, T, Y, Gban, Gonly);
+                    BFS(i, j, T, Y, Gban, Gonly, lingchen);
                 }
             }
         }
