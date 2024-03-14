@@ -122,7 +122,7 @@ int main() {
     cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
 
     string ST = "渭南", ED = "北京西";
-    bool T = true, Y = true, Gban = false, Gonly = true;
+    bool T = true, Y = true, Gban = false, Gonly = false, lingchen = true;
     int stt1 = 0, stm1 = 0, stt2 = 23, stm2 = 59;
     int edt1 = 0, edm1 = 0, edt2 = 23, edm2 = 59;
     int transt = 1;
