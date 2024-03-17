@@ -27,15 +27,23 @@ def handler(head, no, id):
         result[-1] = list(result[-1])
         result[-1][2] = result[-1][1]
         result[-1] = tuple(result[-1])
+    for i in result:
+        if i[0].isdigit():
+            return
+
     lock.acquire()
-    if result != []:
-        with open("train.txt", "a") as f:
+    with open("train.txt", "a", encoding="utf-8") as f:
+        if result != []:
             if head != "":
+                # cont += head.upper() + str(no) + "\n"
                 f.write(head.upper() + str(no) + "\n")
             else:
+                # cont += "N" + str(no) + "\n"
                 f.write("N" + str(no) + "\n")
             for i in result:
+                # cont += i[0] + "\t" + i[1] + "\t" + i[2] + "\n"
                 f.write(i[0] + "\t" + i[1] + "\t" + i[2] + "\n")
+            # cont += "\n"
             f.write("\n")
     pbars[id].update(1)
     lock.release()
@@ -53,4 +61,6 @@ for i, head in enumerate(["g", "d", "c", "z", "t", "k", "s", "y", ""]):
     for no in range(1, 10000) if head != "y" else range(752, 775):
         pool.submit(handler, head, no, i)
 pool.shutdown()
+# with open("train.txt", "a", encoding="utf-8") as f:
+#     f.write(cont)
 # cd "C:\Users\28956\Desktop\24-Spring\Discrete Mathematics(2)\12306" && conda activate dm
