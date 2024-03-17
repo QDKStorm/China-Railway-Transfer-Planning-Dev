@@ -180,7 +180,12 @@ int main() {
         if (!tag)
             continue;
         for (int j = 0; j < res[i].resinfo.size(); j++) {
-            cout << res[i].resinfo[j] << ' ';
+            if (res[i].resinfo[j].length() > 4)
+                cout << res[i].resinfo[j] << ' ';
+            else if (res[i].resinfo[j] == "T")
+                cout << "同城换乘" << ' ';
+            else if (res[i].resinfo[j] == "W")
+                cout << "候车" << ' ';
         }
         cout << endl;
     }
