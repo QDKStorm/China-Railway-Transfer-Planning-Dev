@@ -124,7 +124,7 @@ int main() {
     end = clock();
     cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
 
-    string ST = "渭南", ED = "北京西";
+    string ST = "渭南西", ED = "襄阳";
     bool T = true, Y = true, Gban = false, Gonly = false, lingchen = false;
     int stt1 = 0, stm1 = 0, stt2 = 23, stm2 = 59;
     int edt1 = 0, edm1 = 0, edt2 = 23, edm2 = 59;
@@ -169,6 +169,16 @@ int main() {
     for (int i = 0; i < res.size(); i++) {
         if (res[i].restime > BADLIM * res[0].restime)
             break;
+        bool tag = true;
+        for (int j = 1; j < res[i].resinfo.size() - 2; j += 2) {
+            size_t colonpos1 = res[i].resinfo[j].find("：");
+            size_t colonpos2 = res[i].resinfo[j + 2].find("：");
+            if (colonpos1 != string::npos && colonpos2 != string::npos && res[i].resinfo[j].substr(0, colonpos1) == res[i].resinfo[j + 2].substr(0, colonpos2)) {
+                tag = false;
+            }
+        }
+        if (!tag)
+            continue;
         for (int j = 0; j < res[i].resinfo.size(); j++) {
             cout << res[i].resinfo[j] << ' ';
         }
@@ -179,4 +189,5 @@ int main() {
 /*
 隆回 北京西
 三亚 阿克陶
+渭南西 襄阳
 */
