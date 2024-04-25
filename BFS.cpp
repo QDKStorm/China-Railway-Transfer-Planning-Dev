@@ -105,8 +105,7 @@ void BFS(int S, int T, bool Ttag, bool Ytag, bool Gban, bool Gonly, bool lingche
     }
 }
 int main() {
-    clock_t start, end;
-    start = clock();
+    
     freopen("in.txt", "r", stdin);
     int m, id;
     string station;
@@ -121,8 +120,6 @@ int main() {
     while (cin >> u >> v >> w >> info >> y) {
         addedge(u, v, w, info, y);
     }
-    end = clock();
-    cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
 
     string ST = "渭南西", ED = "襄阳";
     bool T = true, Y = true, Gban = false, Gonly = false, lingchen = false;
@@ -136,6 +133,8 @@ int main() {
     vector<string> ststations, edstations;
     Stringsplit(ST, " ", ststations);
     Stringsplit(ED, " ", edstations);
+    clock_t start, end;
+    start = clock();
     for (int i = 0; i < ststations.size(); i++) {
         for (int j = 0; j < edstations.size(); j++) {
             if (mp.find(ststations[i]) == mp.end() || mp.find(edstations[j]) == mp.end())
@@ -148,6 +147,8 @@ int main() {
             }
         }
     }
+    end = clock();
+    cout << "搜索用时：" + to_string((double)(end - start) / CLOCKS_PER_SEC) + "s" << endl;
     for (int i = 0; i < res.size(); i++) {
         int len = res[i].resinfo.size();
         string lastime = "";
