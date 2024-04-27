@@ -26,7 +26,7 @@ struct Edge {
 struct QElem {
     int u, depth, from, cumtime;
     string info;
-} queue[20000005];
+}queue[20000005];
 struct Node {
     vector<string> resinfo;
     int restime, estitime;
@@ -128,7 +128,7 @@ int main() {
     bool T = true, Y = true, Gban = false, Gonly = false, lingchen = true;
     int stt1 = 0, stm1 = 0, stt2 = 23, stm2 = 59;
     int edt1 = 0, edm1 = 0, edt2 = 23, edm2 = 59;
-    int transt = 3;
+    int transt = 2;
 
     res.clear();
     depth_lim = 2 * transt + 1;
