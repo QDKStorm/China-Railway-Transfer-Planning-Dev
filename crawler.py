@@ -27,38 +27,34 @@ def handler(head, no, id):
         result[-1] = list(result[-1])
         result[-1][2] = result[-1][1]
         result[-1] = tuple(result[-1])
-    for i in result:
-        if i[0].isdigit():
+        for r in result:
+            if r[1] == "----" or r[2] == "----":
+                return
+        if len(result) < 2:
             return
-
-    lock.acquire()
-    with open("train.txt", "a", encoding="utf-8") as f:
-        if result != []:
+        lock.acquire()
+        with open("train.txt", "a") as f:
             if head != "":
-                # cont += head.upper() + str(no) + "\n"
                 f.write(head.upper() + str(no) + "\n")
             else:
-                # cont += "N" + str(no) + "\n"
                 f.write("N" + str(no) + "\n")
             for i in result:
-                # cont += i[0] + "\t" + i[1] + "\t" + i[2] + "\n"
                 f.write(i[0] + "\t" + i[1] + "\t" + i[2] + "\n")
-            # cont += "\n"
             f.write("\n")
+        lock.release()
     pbars[id].update(1)
-    lock.release()
 
 
 with open("train.txt", "w") as f:
     f.write("")
 for i, head in enumerate(["g", "d", "c", "z", "t", "k", "s", "y", ""]):
-    if head == "y":
-        pbars.append(tqdm(total=23, desc=head.upper()))
-    elif head == "":
-        pbars.append(tqdm(total=9999, desc="N"))
+# for i, head in enumerate(["g"]):
+    if head != "y":
+        pbars.append(tqdm(total=9999, desc=head))
     else:
-        pbars.append(tqdm(total=9999, desc=head.upper()))
+        pbars.append(tqdm(total=23, desc=head))
     for no in range(1, 10000) if head != "y" else range(752, 775):
+    # for no in range(5006, 5007):
         pool.submit(handler, head, no, i)
 pool.shutdown()
 # with open("train.txt", "a", encoding="utf-8") as f:
